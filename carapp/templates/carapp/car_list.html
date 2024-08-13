@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Listing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .filters select {
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Home link -->
+    <div class="back-to-home">
+        <a href="{% url 'carapp:homepage' %}">Back to Home</a>
+    </div>
+
+    <h1>Car Listing</h1>
+
+    <div class="filters">
+        <select id="makeFilter">
+            <option value="">All Makes</option>
+            {% for make in make_list %}
+            <option value="{{ make }}">{{ make }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="bodyStyleFilter">
+            <option value="">All Body Styles</option>
+            {% for body_style in body_style_list %}
+            <option value="{{ body_style }}">{{ body_style }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="engineTypeFilter">
+            <option value="">All Engine Types</option>
+            {% for engine_type in engine_type_list %}
+            <option value="{{ engine_type }}">{{ engine_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <table id="carTable">
+        <thead>
+            <tr>
+                <th>Symboling</th>
+                <th>Normalized Losses</th>
+                <th>Make</th>
+                <th>Fuel Type</th>
+                <th>Aspiration</th>
+                <th>Num Doors</th>
+                <th>Body Style</th>
+                <th>Drive Wheels</th>
+                <th>Engine Location</th>
+                <th>Wheel Base</th>
+                <th>Length</th>
+                <th>Width</th>
+                <th>Height</th>
+                <th>Curb Weight</th>
+                <th>Engine Type</th>
+                <th>Num Cylinders</th>
+                <th>Engine Size</th>
+                <th>Fuel System</th>
+                <th>Bore</th>
+                <th>Stroke</th>
+                <th>Compression Ratio</th>
+                <th>Horsepower</th>
+                <th>Peak RPM</th>
+                <th>City MPG</th>
+                <th>Highway MPG</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+            <tr>
+                <td>{{ car.symboling }}</td>
+                <td>{{ car.normalized_losses }}</td>
+                <td>{{ car.make }}</td>
+                <td>{{ car.fuel_type }}</td>
+                <td>{{ car.aspiration }}</td>
+                <td>{{ car.num_doors }}</td>
+                <td>{{ car.body_style }}</td>
+                <td>{{ car.drive_wheels }}</td>
+                <td>{{ car.engine_location }}</td>
+                <td>{{ car.wheel_base }}</td>
+                <td>{{ car.length }}</td>
+                <td>{{ car.width }}</td>
+                <td>{{ car.height }}</td>
+                <td>{{ car.curb_weight }}</td>
+                <td>{{ car.engine_type }}</td>
+                <td>{{ car.num_cylinders }}</td>
+                <td>{{ car.engine_size }}</td>
+                <td>{{ car.fuel_system }}</td>
+                <td>{{ car.bore }}</td>
+                <td>{{ car.stroke }}</td>
+                <td>{{ car.compression_ratio }}</td>
+                <td>{{ car.horsepower }}</td>
+                <td>{{ car.peak_rpm }}</td>
+                <td>{{ car.city_mpg }}</td>
+                <td>{{ car.highway_mpg }}</td>
+                <td>${{ car.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('makeFilter').addEventListener('change', function() {
+            filterTable();
+        });
+        document.getElementById('bodyStyleFilter').addEventListener('change', function() {
+            filterTable();
+        });
+        document.getElementById('engineTypeFilter').addEventListener('change', function() {
+            filterTable();
+        });
+
+        function filterTable() {
+            var makeFilter = document.getElementById('makeFilter').value.toLowerCase();
+            var bodyStyleFilter = document.getElementById('bodyStyleFilter').value.toLowerCase();
+            var engineTypeFilter = document.getElementById('engineTypeFilter').value.toLowerCase();
+            var table = document.getElementById('carTable');
+            var trs = table.getElementsByTagName('tr');
+
+            for (var i = 1; i < trs.length; i++) {
+                var make = trs[i].getElementsByTagName('td')[2].innerText.toLowerCase();
+                var bodyStyle = trs[i].getElementsByTagName('td')[6].innerText.toLowerCase();
+                var engineType = trs[i].getElementsByTagName('td')[14].innerText.toLowerCase();
+
+                if ((makeFilter === "" || make.indexOf(makeFilter) > -1) &&
+                    (bodyStyleFilter === "" || bodyStyle.indexOf(bodyStyleFilter) > -1) &&
+                    (engineTypeFilter === "" || engineType.indexOf(engineTypeFilter) > -1)) {
+                    trs[i].style.display = "";
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .grid-item {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .grid-item:nth-child(odd) {
+            background-color: #e0f7fa;
+        }
+        .grid-item:nth-child(even) {
+            background-color: #ffe0b2;
+        }
+        .user-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .user-email, .user-login, .user-phone {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Profiles</h1>
+    <div class="grid-container">
+        {% for user in users %}
+        <div class="grid-item">
+            {% if user.picture.large %}
+            <img class="user-picture" src="{{ user.picture.large }}" alt="User Picture">
+            {% else %}
+            <img class="user-picture" src="https://via.placeholder.com/100" alt="No Image Available">
+            {% endif %}
+            <div class="user-name">{{ user.name.first }} {{ user.name.last }}</div>
+            <div class="user-email">{{ user.email }}</div>
+            <div class="user-login">Username: {{ user.login.username }}</div>
+            <div class="user-login">Password: {{ user.login.password }}</div>
+            <div class="user-phone">Phone: {{ user.phone }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

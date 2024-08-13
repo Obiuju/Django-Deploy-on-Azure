@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYZ Corporation</title>
+    <!-- Update the CSS path to include the app directory -->
+    <link rel="stylesheet" type="text/css" href="{% static 'carapp/css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'carapp:homepage' %}">Home</a></li>
+                <li><a href="{% url 'carapp:car_list' %}">Car List</a></li>
+                <li><a href="{% url 'carapp:dashboard' %}">Dashboard View</a></li>
+                <li><a href="{% url 'carapp:users_profile' %}">Users Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero-image">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+            <h1>Welcome to XYZ Corporation</h1>
+            <p>We are Automobile professionals</p>
+        </div>
+    </div>
+
+</body>
+</html>
