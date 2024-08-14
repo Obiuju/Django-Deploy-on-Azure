@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME', 'finalproject'),
         'USER': os.environ.get('DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'Ujuobi93#'),
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     },
@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('USER_DB_NAME', 'group9'),
         'USER': os.environ.get('USER_DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('USER_DB_PASSWORD', ''),
+        'PASSWORD': os.environ.get('USER_DB_PASSWORD', 'Ujuobi93#'),
         'HOST': os.environ.get('USER_DB_HOST', 'localhost'),
         'PORT': os.environ.get('USER_DB_PORT', '5432'),
     }
