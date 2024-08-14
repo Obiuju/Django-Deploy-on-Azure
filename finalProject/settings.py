@@ -79,12 +79,20 @@ WSGI_APPLICATION = "finalProject.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'bdat1004',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb+srv://obianefoujunwa:Ujuobi93#@bdat1004.j3asb.mongodb.net/?retryWrites=true&w=majority&appName=BDAT1004',
-        }
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL for Car data
+        'NAME': 'finalproject',  # Replace with your PostgreSQL database name for car data
+        'USER': 'postgres',  # Your PostgreSQL username
+        'PASSWORD': 'Ujuobi93#',  # Your PostgreSQL password
+        'HOST': 'localhost',  # Or the remote host if applicable
+        'PORT': '5432',  # Default PostgreSQL port
+    },
+    'user_db': {
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL for User data
+        'NAME': 'group9',  # Replace with your PostgreSQL database name for user data
+        'USER': 'postgres',  # Your PostgreSQL username
+        'PASSWORD': 'Ujuobi93#',  # Your PostgreSQL password
+        'HOST': 'localhost',  # Or the remote host if applicable
+        'PORT': '5432',  # Default PostgreSQL port
     }
 }
 

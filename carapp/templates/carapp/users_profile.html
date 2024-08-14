@@ -47,16 +47,15 @@
     <div class="grid-container">
         {% for user in users %}
         <div class="grid-item">
-            {% if user.picture.large %}
-            <img class="user-picture" src="{{ user.picture.large }}" alt="User Picture">
+            {% if user.5 %}
+            <img class="user-picture" src="{{ user.5 }}" alt="User Picture">
             {% else %}
             <img class="user-picture" src="https://via.placeholder.com/100" alt="No Image Available">
             {% endif %}
-            <div class="user-name">{{ user.name.first }} {{ user.name.last }}</div>
-            <div class="user-email">{{ user.email }}</div>
-            <div class="user-login">Username: {{ user.login.username }}</div>
-            <div class="user-login">Password: {{ user.login.password }}</div>
-            <div class="user-phone">Phone: {{ user.phone }}</div>
+            <div class="user-name">{{ user.0 }} {{ user.1 }}</div>
+            <div class="user-email">{{ user.2 }}</div>
+            <div class="user-login">Username: {{ user.3 }}</div>
+            <div class="user-phone">Phone: {{ user.4 }}</div>
         </div>
         {% endfor %}
     </div>

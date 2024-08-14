@@ -1,23 +1,49 @@
 from django.shortcuts import render
-#from .models import Car  
-#from .forms import CarForm
-from pymongo import MongoClient 
-from bson.objectid import ObjectId 
+import psycopg2
 from collections import Counter, defaultdict
+
+def get_car_db_connection():
+    conn = psycopg2.connect(
+        host="localhost",  # Replace with your PostgreSQL host
+        database="finalproject",  # Replace with your car database name
+        user="postgres",  # Replace with your PostgreSQL username
+        password="Ujuobi93#"  # Replace with your PostgreSQL password
+    )
+    return conn
+
+# Connection for the user database
+def get_user_db_connection():
+    conn = psycopg2.connect(
+        host="localhost",  # Replace with your PostgreSQL host
+        database="group9",  # Replace with your user database name
+        user="postgres",  # Replace with your PostgreSQL username
+        password="Ujuobi93#",  # Replace with your PostgreSQL password
+        port='5432'  # Ensure the correct port is used, typically 5432
+    )
+    return conn
 
 def homepage(request):
     return render(request, 'carapp/homepage.html')
 
 def car_list(request):
-    client = MongoClient("mongodb+srv://obianefoujunwa:Ujuobi93#@bdat1004.j3asb.mongodb.net/?retryWrites=true&w=majority&appName=BDAT1004")
-    db = client['bdat1004']
-    collection = db['fp_group_9']
+    conn = get_car_db_connection()
+    cursor = conn.cursor()
 
-    cars = list(collection.find())
+    cursor.execute("SELECT * FROM cars")  # Query for cars table
+    cars = cursor.fetchall()
+    print(cars)
 
-    make_list = collection.distinct('make')
-    body_style_list = collection.distinct('body_style')
-    engine_type_list = collection.distinct('engine_type')
+    cursor.execute("SELECT DISTINCT make FROM cars")
+    make_list = cursor.fetchall()
+
+    cursor.execute("SELECT DISTINCT body_style FROM cars")
+    body_style_list = cursor.fetchall()
+
+    cursor.execute("SELECT DISTINCT engine_type FROM cars")
+    engine_type_list = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
 
     context = {
         'cars': cars,
@@ -29,66 +55,55 @@ def car_list(request):
     return render(request, 'carapp/car_list.html', context)
 
 def dashboard_view(request):
-    client = MongoClient("mongodb+srv://obianefoujunwa:Ujuobi93#@bdat1004.j3asb.mongodb.net/?retryWrites=true&w=majority&appName=BDAT1004")
-    db = client['bdat1004']
-    collection = db['fp_group_9']
-    user_collection = db['user_profile']
+    # Connect to the car database
+    conn = get_car_db_connection()
+    cursor = conn.cursor()
 
     # Make counts
-    make_counts = {}
-    for car in collection.find():
-        make = car.get('make', 'Unknown')
-        if make in make_counts:
-            make_counts[make] += 1
-        else:
-            make_counts[make] = 1
+    cursor.execute("SELECT make, COUNT(*) FROM cars GROUP BY make")
+    make_counts = dict(cursor.fetchall())
 
-    cars = collection.find()
-
-    # Visualization 3: Make to Horsepower > 200
-    make_horsepower = []
-    for car in cars:
-        try:
-            horsepower = int(car.get('horsepower', 0))  # Ensure horsepower is an integer
-            if horsepower > 200:
-                make_horsepower.append([car.get('make', ''), horsepower])
-        except ValueError:
-            continue  # Skip if conversion fails
-    cars = collection.find()
-
+    # Make to Horsepower > 200
+    cursor.execute("""
+        SELECT make, horsepower::integer 
+        FROM cars 
+        WHERE horsepower ~ '^[0-9]+$' AND horsepower::integer > 200
+    """)
+    make_horsepower = cursor.fetchall()
 
     # Pie chart for Average Price by Body Type
-    price_bodytype_dict = defaultdict(list)
-    for car in collection.find({'price': {'$ne': None}}):
-        body_type = car.get('body_style', 'Unknown')
-        price = car.get('price', 0)
-        try:
-            price = float(price)
-        except ValueError:
-            price = 0.0
-        price_bodytype_dict[body_type].append(price)
-
-    # Calculate average price for each body type
-    price_bodytype = [(body_type, sum(prices) / len(prices)) for body_type, prices in price_bodytype_dict.items() if len(prices) > 0]
-    cars = collection.find()
-
+    cursor.execute("""
+        SELECT body_style, AVG(price::numeric) 
+        FROM cars 
+        WHERE price ~ '^[0-9]+$' AND price IS NOT NULL 
+        GROUP BY body_style
+    """)
+    price_bodytype = cursor.fetchall()
 
     # Scatter plot for Price vs. Horsepower
-    price_horsepower = []
-    for car in collection.find({'price': {'$ne': None}, 'horsepower': {'$ne': None}}):
-        price = car.get('price', 0)
-        horsepower = car.get('horsepower', 0)
-        try:
-            price = float(price)
-            horsepower = int(horsepower)
-        except ValueError:
-            price = 0.0
-            horsepower = 0
-        price_horsepower.append((price, horsepower))
+    cursor.execute("""
+        SELECT price::numeric, horsepower::integer 
+        FROM cars 
+        WHERE price ~ '^[0-9]+$' AND horsepower ~ '^[0-9]+$' 
+        AND price IS NOT NULL 
+        AND horsepower IS NOT NULL
+    """)
+    price_horsepower = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # Connect to the user database
+    conn = get_user_db_connection()
+    cursor = conn.cursor()
 
     # User Data Processing
-    users = list(user_collection.find({}))
+    cursor.execute("SELECT * FROM user_profile")  # Ensure this table exists in the correct database
+    users = cursor.fetchall()
     user_count = len(users)
+
+    cursor.close()
+    conn.close()
 
     context = {
         'make_counts': make_counts,
@@ -98,21 +113,22 @@ def dashboard_view(request):
         'user_count': user_count,
         'users': users,
     }
+
     return render(request, 'carapp/dashboard.html', context)
 
-
 def users_profile(request):
-    # Connect to the MongoDB database
-    client = MongoClient("mongodb+srv://obianefoujunwa:Ujuobi93#@bdat1004.j3asb.mongodb.net/?retryWrites=true&w=majority&appName=BDAT1004")
-    db = client.get_database("bdat1004")
-    collection = db.user_profile
+    conn = get_user_db_connection()
+    cursor = conn.cursor()
 
     # Retrieve all users' data
-    users = list(collection.find({}, {'name': 1, 'email': 1, 'login': 1, 'phone': 1, 'picture': 1}))
+    cursor.execute("SELECT first_name, last_name, email, username, phone, picture FROM user_profile")
+    users = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
 
     context = {
         'users': users,
     }
 
     return render(request, 'carapp/users_profile.html', context)
-
