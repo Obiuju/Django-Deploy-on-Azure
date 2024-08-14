@@ -27,9 +27,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-aeq6$_w0iee$%=
 # export DJANGO_SECRET_KEY='nu@2zd($)d^3rgq2!j#_5fvsndow(3t6worrh-m6tai!^o15mq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'xyzcorporationdemo.onrender.com').split(',')
 
 # Application definition
 
@@ -79,20 +79,20 @@ WSGI_APPLICATION = "finalProject.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL for Car data
-        'NAME': 'finalproject',  # Replace with your PostgreSQL database name for car data
-        'USER': 'postgres',  # Your PostgreSQL username
-        'PASSWORD': 'Ujuobi93#',  # Your PostgreSQL password
-        'HOST': 'localhost',  # Or the remote host if applicable
-        'PORT': '5432',  # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'finalproject'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     },
     'user_db': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL for User data
-        'NAME': 'group9',  # Replace with your PostgreSQL database name for user data
-        'USER': 'postgres',  # Your PostgreSQL username
-        'PASSWORD': 'Ujuobi93#',  # Your PostgreSQL password
-        'HOST': 'localhost',  # Or the remote host if applicable
-        'PORT': '5432',  # Default PostgreSQL port
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('USER_DB_NAME', 'group9'),
+        'USER': os.environ.get('USER_DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('USER_DB_PASSWORD', ''),
+        'HOST': os.environ.get('USER_DB_HOST', 'localhost'),
+        'PORT': os.environ.get('USER_DB_PORT', '5432'),
     }
 }
 
@@ -128,10 +128,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles" 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-aeq6$_w0iee$%=6mqfo-2h%j%gjc5_si$encypgp2mik$^^&7=')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
