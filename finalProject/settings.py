@@ -16,15 +16,6 @@ ALLOWED_HOSTS = ['*']
 
 # Other settings...
 
-# Your custom runserver command
-if 'PORT' in os.environ:
-    port = int(os.environ['PORT'])
-else:
-    port = 4000  # default port if PORT environment variable isn't set
-
-# This will ensure Django runs on the correct port
-if __name__ == "__main__":
-    execute_from_command_line(["manage.py", "runserver", "0.0.0.0:" + str(port)])
 #os.environ.get('DJANGO_ALLOWED_HOSTS', 'xyzcorporationdemo.onrender.com').split(',')
 
 # Application definition
