@@ -58,8 +58,8 @@ WSGI_APPLICATION = "finalProject.wsgi.application"
 
 # Database configuration using environment variables
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('PRIMARY_DATABASE_URL')),
-    'user_db': dj_database_url.config(default=os.environ.get('SECONDARY_DATABASE_URL')),
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
+    'user_db': dj_database_url.config(default=os.environ.get('USER_DB_URL')),
 }
 
 # Default to local Postgres settings if not using environment variables
