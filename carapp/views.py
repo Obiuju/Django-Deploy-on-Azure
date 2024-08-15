@@ -2,6 +2,11 @@ from django.shortcuts import render
 import psycopg2
 from collections import Counter, defaultdict
 from django.db import connections
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def get_car_db_connection():
     return connections['default']  # This will use the 'default' database in settings.py
@@ -16,9 +21,8 @@ def car_list(request):
     conn = get_car_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM cars")  # Query for cars table
+    cursor.execute("SELECT id, make, model, price FROM cars")  # Retrieve only necessary fields
     cars = cursor.fetchall()
-    print(cars)
 
     cursor.execute("SELECT DISTINCT make FROM cars")
     make_list = cursor.fetchall()
@@ -31,6 +35,9 @@ def car_list(request):
 
     cursor.close()
     conn.close()
+
+    # Logging example (optional)
+    logger.info(f"Retrieved {len(cars)} cars from the database.")
 
     context = {
         'cars': cars,
@@ -80,12 +87,16 @@ def dashboard_view(request):
     cursor.close()
     conn.close()
 
+    # Logging example (optional)
+    logger.info(f"Dashboard data retrieved: {len(make_counts)} makes, "
+                f"{len(price_bodytype)} price by body type entries.")
+
     # Connect to the user database
     conn = get_user_db_connection()
     cursor = conn.cursor()
 
     # User Data Processing
-    cursor.execute("SELECT * FROM user_profile")  # Ensure this table exists in the correct database
+    cursor.execute("SELECT id, first_name, last_name FROM user_profile")  # Only fetch needed fields
     users = cursor.fetchall()
     user_count = len(users)
 
@@ -107,7 +118,7 @@ def users_profile(request):
     conn = get_user_db_connection()
     cursor = conn.cursor()
 
-    # Retrieve all users' data
+    # Retrieve only necessary user data
     cursor.execute("SELECT first_name, last_name, email, username, phone, picture FROM user_profile")
     users = cursor.fetchall()
 
