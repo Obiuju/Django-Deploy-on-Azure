@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import psycopg2
 from collections import Counter, defaultdict
+from django.db import connections
 
 def get_car_db_connection():
     return connections['default']  # This will use the 'default' database in settings.py
