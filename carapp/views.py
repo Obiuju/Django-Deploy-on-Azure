@@ -21,8 +21,8 @@ def car_list(request):
     conn = get_car_db_connection()
     cursor = conn.cursor()
 
-    # Modify the query to select existing columns only
-    cursor.execute("SELECT id, make, price FROM cars")  # Adjust the columns to those that exist in your table
+    # Adjusted query to select all columns
+    cursor.execute("SELECT * FROM cars")  # This will select all columns from the cars table
     cars = cursor.fetchall()
 
     cursor.execute("SELECT DISTINCT make FROM cars")
@@ -45,7 +45,6 @@ def car_list(request):
     }
 
     return render(request, 'carapp/car_list.html', context)
-
 
 def dashboard_view(request):
     # Connect to the car database
