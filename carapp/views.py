@@ -21,7 +21,8 @@ def car_list(request):
     conn = get_car_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, make, model, price FROM cars")  # Retrieve only necessary fields
+    # Modify the query to select existing columns only
+    cursor.execute("SELECT id, make, price FROM cars")  # Adjust the columns to those that exist in your table
     cars = cursor.fetchall()
 
     cursor.execute("SELECT DISTINCT make FROM cars")
@@ -36,9 +37,6 @@ def car_list(request):
     cursor.close()
     conn.close()
 
-    # Logging example (optional)
-    logger.info(f"Retrieved {len(cars)} cars from the database.")
-
     context = {
         'cars': cars,
         'make_list': make_list,
@@ -47,6 +45,7 @@ def car_list(request):
     }
 
     return render(request, 'carapp/car_list.html', context)
+
 
 def dashboard_view(request):
     # Connect to the car database
