@@ -11,7 +11,21 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-aeq6$_w0iee$%=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'xyzcorporationdemo.onrender.com').split(',')
+# Allow the app to listen on all IP addresses
+ALLOWED_HOSTS = ['*']
+
+# Other settings...
+
+# Your custom runserver command
+if 'PORT' in os.environ:
+    port = int(os.environ['PORT'])
+else:
+    port = 4000  # default port if PORT environment variable isn't set
+
+# This will ensure Django runs on the correct port
+if __name__ == "__main__":
+    execute_from_command_line(["manage.py", "runserver", "0.0.0.0:" + str(port)])
+#os.environ.get('DJANGO_ALLOWED_HOSTS', 'xyzcorporationdemo.onrender.com').split(',')
 
 # Application definition
 INSTALLED_APPS = [
