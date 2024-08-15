@@ -3,24 +3,10 @@ import psycopg2
 from collections import Counter, defaultdict
 
 def get_car_db_connection():
-    conn = psycopg2.connect(
-        host="localhost",  # Replace with your PostgreSQL host
-        database="finalproject",  # Replace with your car database name
-        user="postgres",  # Replace with your PostgreSQL username
-        password="Ujuobi93#"  # Replace with your PostgreSQL password
-    )
-    return conn
+    return connections['default']  # This will use the 'default' database in settings.py
 
-# Connection for the user database
 def get_user_db_connection():
-    conn = psycopg2.connect(
-        host="localhost",  # Replace with your PostgreSQL host
-        database="group9",  # Replace with your user database name
-        user="postgres",  # Replace with your PostgreSQL username
-        password="Ujuobi93#",  # Replace with your PostgreSQL password
-        port='5432'  # Ensure the correct port is used, typically 5432
-    )
-    return conn
+    return connections['user_db']  # This will use the 'user_db' database in settings.py
 
 def homepage(request):
     return render(request, 'carapp/homepage.html')
