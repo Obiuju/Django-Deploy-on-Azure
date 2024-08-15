@@ -21,18 +21,17 @@ def car_list(request):
     conn = get_car_db_connection()
     cursor = conn.cursor()
 
-    # Adjusted query to select all columns
     cursor.execute("SELECT * FROM cars")  # This will select all columns from the cars table
     cars = cursor.fetchall()
 
     cursor.execute("SELECT DISTINCT make FROM cars")
-    make_list = cursor.fetchall()
+    make_list = [row[0] for row in cursor.fetchall()]  # Extract just the values
 
     cursor.execute("SELECT DISTINCT body_style FROM cars")
-    body_style_list = cursor.fetchall()
+    body_style_list = [row[0] for row in cursor.fetchall()]  # Extract just the values
 
     cursor.execute("SELECT DISTINCT engine_type FROM cars")
-    engine_type_list = cursor.fetchall()
+    engine_type_list = [row[0] for row in cursor.fetchall()]  # Extract just the values
 
     cursor.close()
     conn.close()
@@ -45,6 +44,7 @@ def car_list(request):
     }
 
     return render(request, 'carapp/car_list.html', context)
+
 
 def dashboard_view(request):
     # Connect to the car database
